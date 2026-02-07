@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Security (Secrets)
+digipol-2-0-firebase-adminsdk-*.json
+
