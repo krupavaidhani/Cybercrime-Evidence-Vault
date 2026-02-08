@@ -84,10 +84,10 @@ export default function SeizureOfficerDashboard() {
         console.log("Fetching cases for SO:", userData.walletAddress);
 
         // Filter by Status AND Assigned Wallet
+        // Filter by Status ONLY (removed assignedSO constraint to show ALL active cases)
         const q = query(
             collection(db, "cases"),
-            where("status", "in", ["OPEN", "COLLECTED"]),
-            where("assignedSO", "==", userData.walletAddress)
+            where("status", "in", ["OPEN", "COLLECTED", "IN_TRANSIT"])
         );
 
         const unsubscribe = onSnapshot(q, (snapshot) => {

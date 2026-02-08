@@ -49,10 +49,13 @@ export default function IODashboard() {
 
     // Filter Logic
     const filteredCases = cases.filter(c => {
+        const s = c.blockchainStatus || c.status; // Fallback
         if (filter === "ALL") return true;
-        if (filter === "ACTIVE") return ["OPEN", "COLLECTED", "SECURED"].includes(c.blockchainStatus);
-        if (filter === "PENDING") return ["COLLECTED", "SECURED"].includes(c.blockchainStatus); // Pending Analysis
-        if (filter === "FINALIZED") return c.blockchainStatus === "FINALIZED";
+        // ACTIVE: Everything that is NOT Finalized
+        if (filter === "ACTIVE") return !["FINALIZED"].includes(s);
+        // PENDING: Cases waiting for action (Created/Open = pending seizure, Collected/Secured = pending analysis)
+        if (filter === "PENDING") return ["CREATED", "OPEN", "COLLECTED", "SECURED", "IN_TRANSIT"].includes(s);
+        if (filter === "FINALIZED") return s === "FINALIZED";
         return true;
     });
 
