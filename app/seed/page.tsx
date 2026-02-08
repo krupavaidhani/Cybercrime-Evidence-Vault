@@ -5,7 +5,7 @@ import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { doc, setDoc, collection, getDocs, writeBatch } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 import Link from "next/link";
-import { Database, Users, Shield, Trash2 } from "lucide-react";
+import { Database, Users, Shield, Trash2, CheckCircle, AlertTriangle } from "lucide-react";
 
 const users = [
     { email: "io@police.gov.in", role: "INVESTIGATION_OFFICER", name: "Inspector Arjun" },
@@ -18,16 +18,20 @@ const users = [
 export default function SeedPage() {
     const [status, setStatus] = useState<string>("");
     const [loading, setLoading] = useState(false);
+    const [logs, setLogs] = useState<string[]>([]); // Defined logs state
 
     const seedUsers = async () => {
         setLoading(true);
         setStatus("Initializing seeding process...");
+        setLogs([]); // Clear previous logs
+        let newLogs: string[] = []; // Initialized local variable
 
         for (const u of users) {
             try {
                 await signOut(auth); // Ensure clean state
                 setStatus(`Creating user: ${u.email}...`);
 
+                // Check if user exists (handled by catch block usually, but firebase errors if exists)
                 const cred = await createUserWithEmailAndPassword(auth, u.email, "password123");
                 const uid = cred.user.uid;
 
@@ -40,14 +44,21 @@ export default function SeedPage() {
                     createdAt: new Date(),
                 });
 
-                newLogs.push(`✅ Created ${u.email} (${u.role})`);
-                setLogs([...newLogs]);
+                const successMsg = `✅ Created ${u.email} (${u.role})`;
+                newLogs.push(successMsg);
+                setLogs([...newLogs]); // Correctly updates React state
 
             } catch (error: any) {
                 if (error.code === 'auth/email-already-in-use') {
-                    setStatus(`⚠️ User ${u.email} already exists. Skipping.`);
+                    const msg = `⚠️ User ${u.email} already exists. Skipping.`;
+                    setStatus(msg);
+                    newLogs.push(msg); // Add to logs
+                    setLogs([...newLogs]);
                 } else {
-                    setStatus(`❌ Error creating ${u.email}: ${error.message}`);
+                    const msg = `❌ Error creating ${u.email}: ${error.message}`;
+                    setStatus(msg);
+                    newLogs.push(msg); // Add to logs
+                    setLogs([...newLogs]);
                 }
             }
         }
@@ -153,6 +164,17 @@ export default function SeedPage() {
                     <div className={`mt-6 p-4 rounded text-sm text-center ${status.includes("Error") ? "bg-red-900/20 text-red-400 border border-red-900/50" : "bg-emerald-900/20 text-emerald-400 border border-emerald-900/50"
                         }`}>
                         {status}
+                    </div>
+                )}
+
+                {/* Logs Display */}
+                {logs.length > 0 && (
+                    <div className="mt-4 p-4 bg-slate-950 rounded border border-slate-800 max-h-40 overflow-y-auto text-xs font-mono text-slate-400 space-y-1">
+                        {logs.map((log, i) => (
+                            <div key={i} className="flex items-start gap-2">
+                                <span>{log}</span>
+                            </div>
+                        ))}
                     </div>
                 )}
 
