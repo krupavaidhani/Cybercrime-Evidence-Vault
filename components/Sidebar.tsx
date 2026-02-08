@@ -79,8 +79,8 @@ export default function Sidebar() {
                     <div className="p-6 border-b border-slate-800 flex items-center gap-3">
                         <Shield className="w-8 h-8 text-emerald-500" />
                         <div>
-                            <h1 className="font-bold text-slate-100 tracking-wider">DIGIPOL</h1>
-                            <p className="text-[10px] text-slate-500 uppercase">Version 2.0</p>
+                            <h1 className="font-bold text-slate-100 tracking-wider">CYBERVAULT</h1>
+                            <p className="text-[10px] text-slate-500 uppercase">Secure DMS v1.0</p>
                         </div>
                     </div>
 
