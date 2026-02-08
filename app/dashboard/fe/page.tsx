@@ -464,7 +464,7 @@ export default function ForensicWorkbench() {
                         <h3 className="text-[10px] font-bold text-slate-500 uppercase mb-2">Session Activity</h3>
                         <div className="space-y-1 font-mono text-[10px] text-slate-500">
                             {logs.slice(0, 5).map((l, i) => (
-                                <div key={i} truncate>{l.action}</div>
+                                <div key={i} className="truncate">{l.action}</div>
                             ))}
                         </div>
                     </div>
