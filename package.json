@@ -2,11 +2,29 @@
   "name": "digipol-2-0",
   "version": "0.1.0",
   "private": true,
+  "main": "main.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "electron:dev": "electron .",
+    "electron:build": "electron-builder"
+  },
+  "build": {
+    "appId": "com.cybervault.app",
+    "productName": "CyberVault",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "portable",
+      "icon": "assets/icon.ico"
+    },
+    "files": [
+      "main.js",
+      "package.json"
+    ]
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.4.0",
@@ -39,6 +57,8 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "chai": "^4.5.0",
+    "electron": "^40.2.1",
+    "electron-builder": "^26.7.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "ethers": "^6.16.0",

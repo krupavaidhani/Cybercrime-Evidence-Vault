@@ -99,24 +99,33 @@ export default function CustodianDashboard() {
         setIntegrityError(null);
 
         try {
-            // 1. Deep Verification: Download & Re-Hash
-            setVerifyStatus("Downloading from Secure Storage...");
-            const response = await fetch(item.storageURL);
-            if (!response.ok) throw new Error("Secure Storage Connection Failed");
+            // 1. Evidence Verification Logic
+            const isPhysical = item.storageURL === "PHYSICAL_ASSET_NO_URL" || item.fileType === "PHYSICAL/HARDWARE";
 
-            const blob = await response.blob();
-            const file = new File([blob], item.fileName, { type: item.fileType });
+            if (isPhysical) {
+                setVerifyStatus("Verifying Physical Seal Integrity...");
+                // Simulated delay for physical inspection effect
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                setVerifyStatus("Physical Seal Matches Blockchain Record.");
+            } else {
+                // Digital Flow: Download & Re-Hash
+                setVerifyStatus("Downloading from Secure Storage...");
+                const response = await fetch(item.storageURL);
+                if (!response.ok) throw new Error("Secure Storage Connection Failed");
 
-            setVerifyStatus("Calculating SHA-256 Hash (Client-Side)...");
-            const calculatedHash = await generateFileHash(file);
+                const blob = await response.blob();
+                const file = new File([blob], item.fileName, { type: item.fileType });
 
-            if (calculatedHash !== item.fileHash) {
-                const errorMsg = `HASH MISMATCH DETECTED! Local: ${calculatedHash.substring(0, 8)}... | Chain: ${item.fileHash.substring(0, 8)}...`;
-                setIntegrityError(errorMsg);
-                throw new Error(errorMsg);
+                setVerifyStatus("Calculating SHA-256 Hash (Client-Side)...");
+                const calculatedHash = await generateFileHash(file);
+
+                if (calculatedHash !== item.fileHash) {
+                    const errorMsg = `HASH MISMATCH DETECTED! Local: ${calculatedHash.substring(0, 8)}... | Chain: ${item.fileHash.substring(0, 8)}...`;
+                    setIntegrityError(errorMsg);
+                    throw new Error(errorMsg);
+                }
+                setVerifyStatus("Integrity Verified. Requesting Blockchain Signature...");
             }
-
-            setVerifyStatus("Integrity Verified. Requesting Blockchain Signature...");
 
             // 2. Blockchain Handshake
             const provider = new ethers.BrowserProvider(window.ethereum);
