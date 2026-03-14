@@ -27,6 +27,7 @@
     ]
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "@openzeppelin/contracts": "^5.4.0",
     "clsx": "^2.1.1",
     "dotenv": "^17.2.4",
@@ -37,7 +38,9 @@
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "tailwind-merge": "^3.4.0"
+    "react-hook-form": "^7.71.1",
+    "tailwind-merge": "^3.4.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.1.0",

@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "D:\\Digipol 2.0\\contracts\\EvidenceVault.sol": {
-      "lastModificationDate": 1770482915788,
-      "contentHash": "1aa6158b7b4fa27f52afd81a827566ef",
+      "lastModificationDate": 1770633816486,
+      "contentHash": "a1cb2c038c8ef99ce039c60b7d98d46e",
       "sourceName": "contracts/EvidenceVault.sol",
       "solcConfig": {
         "version": "0.8.20",

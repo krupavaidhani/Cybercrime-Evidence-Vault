@@ -32,7 +32,26 @@ contract EvidenceVault is AccessControl {
         address transferTo; // Temporary holding for intended recipient
     }
 
+    struct CaseRecord {
+        string caseID;
+        string firNumber;
+        bytes32 firHash;
+        address creatorIO;
+        uint256 timestamp;
+        string incidentType;
+        string priority;
+    }
+
     mapping(string => EvidenceRecord) public vault;
+    mapping(string => CaseRecord) public cases;
+
+    event CaseCreated(
+        string indexed caseID,
+        string firNumber,
+        bytes32 indexed firHash,
+        address indexed creatorIO,
+        uint256 timestamp
+    );
 
     event EvidenceLogged(
         string indexed evidenceID,
@@ -82,6 +101,30 @@ contract EvidenceVault is AccessControl {
         _grantRole(SO_ROLE, msg.sender);
         _grantRole(CUSTODIAN_ROLE, msg.sender);
         _grantRole(EXAMINER_ROLE, msg.sender);
+    }
+
+    function createCase(
+        string memory _caseID,
+        string memory _firNumber,
+        bytes32 _firHash,
+        string memory _incidentType,
+        string memory _priority
+    ) public onlyRole(IO_ROLE) {
+        require(cases[_caseID].timestamp == 0, "Case ID already exists");
+
+        CaseRecord memory newCase = CaseRecord({
+            caseID: _caseID,
+            firNumber: _firNumber,
+            firHash: _firHash,
+            creatorIO: msg.sender,
+            timestamp: block.timestamp,
+            incidentType: _incidentType,
+            priority: _priority
+        });
+
+        cases[_caseID] = newCase;
+
+        emit CaseCreated(_caseID, _firNumber, _firHash, msg.sender, block.timestamp);
     }
 
     function addEvidence(
